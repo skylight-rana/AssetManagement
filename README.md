@@ -19,7 +19,7 @@ The backend provides RESTful APIs to:
 
 This project follows a multi-layered architecture:
 
-"Layers"
+**__Layers__**
 
 API Layer → Controllers (handles HTTP requests)
 
