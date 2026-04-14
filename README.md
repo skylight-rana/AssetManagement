@@ -19,7 +19,7 @@ The backend provides RESTful APIs to:
 
 This project follows a multi-layered architecture:
 
-**__Layers__**
+**Layers**
 
 API Layer → Controllers (handles HTTP requests)
 
@@ -49,19 +49,19 @@ Models Layer → Entities and DTOs
 
 **Features**
 
-👤 User & Authentication
+👤 **User & Authentication**
 
 Simple login API
 
 Role-based users (Admin / Employee)
 
-💻 Asset Management
+💻 **Asset Management**
 
 Add, view, delete assets
 
 Track asset status (Available / Assigned / UnderRepair)
 
-🔄 Asset Assignment
+🔄 **Asset Assignment**
 
 Assign asset to employee
 
@@ -71,7 +71,7 @@ Prevent duplicate assignment
 
 Auto-update asset status
 
-🎫 Ticket System
+🎫 **Ticket System**
 
 Employees raise issues
 
@@ -79,7 +79,7 @@ Admin updates status
 
 Status flow: Open → InProgress → Resolved
 
-🛠️ Maintenance Logs
+🛠️ **Maintenance Logs**
 
 Track repairs and upgrades
 
@@ -87,7 +87,7 @@ Store cost and descriptions
 
 Maintain asset history
 
-📄 Document Upload
+📄 **Document Upload**
 
 Upload asset-related files
 
