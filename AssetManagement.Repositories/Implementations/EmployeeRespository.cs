@@ -27,4 +27,9 @@ public class EmployeeRepository : IEmployeeRepository
     {
         return _context.Employees.ToList();
     }
+
+    public Employee GetByUserId(int userId)
+    {
+        return _context.Employees.FirstOrDefault(e => e.UserId == userId);
+    }
 }

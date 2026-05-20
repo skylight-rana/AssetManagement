@@ -27,4 +27,19 @@ public class AccountController : ControllerBase
             return Unauthorized(ex.Message);
         }
     }
+
+    [HttpPost("users")]
+    public IActionResult CreateUser([FromBody] CreateUserDto request)
+    {
+        try
+        {
+            _userService.CreateUser(request);
+            return Ok("User created successfully");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using AssetManagement.Models.DTOs;
 using AssetManagement.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -14,17 +15,29 @@ public class AssetDocumentController : ControllerBase
 
     // Upload file
     [HttpPost("upload")]
-    public async Task<IActionResult> Upload(IFormFile file, int assetId)
+    [Consumes("multipart/form-data")]
+    public IActionResult Upload([FromForm] UploadDocumentRequestDto request)
     {
-        if (file == null || file.Length == 0)
-            return BadRequest("File is required");
+        if (request.File == null || request.File.Length == 0)
+        {
+            return BadRequest("No file uploaded");
+        }
+
+        if (request.AssetId <= 0)
+        {
+            return BadRequest("Invalid asset id");
+        }
 
         using var ms = new MemoryStream();
-        await file.CopyToAsync(ms);
+        request.File.CopyTo(ms);
 
-        _service.UploadDocument(ms.ToArray(), file.FileName, assetId);
+        _service.UploadDocument(
+            ms.ToArray(),
+            request.File.FileName,
+            request.AssetId
+        );
 
-        return Ok("File Uploaded Successfully");
+        return Ok("File uploaded successfully");
     }
 
     // Get documents by asset

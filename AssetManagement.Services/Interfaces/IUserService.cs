@@ -8,4 +8,5 @@ namespace AssetManagement.Services.Interfaces;
 public interface IUserService
 {
     LoginResponseDto Login(LoginRequestDto request);
+    void CreateUser(CreateUserDto request);
 }

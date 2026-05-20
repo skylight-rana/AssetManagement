@@ -10,4 +10,5 @@ public class AssetResponseDto
     public string Type { get; set; }
     public string SerialNumber { get; set; }
     public string Status { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

@@ -10,4 +10,5 @@ public interface IEmployeeRepository
 {
     void AddEmployee(Employee employee);
     List<Employee> GetAllEmployees();
+    Employee GetByUserId(int userId);
 }

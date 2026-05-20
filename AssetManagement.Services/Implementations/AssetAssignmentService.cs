@@ -11,13 +11,16 @@ public class AssetAssignmentService : IAssetAssignmentService
 {
     private readonly IAssetAssignmentRepository _assignmentRepo;
     private readonly IAssetRepository _assetRepo;
+    private readonly IEmployeeRepository _employeeRepo;
 
     public AssetAssignmentService(
         IAssetAssignmentRepository assignmentRepo,
-        IAssetRepository assetRepo)
+        IAssetRepository assetRepo,
+        IEmployeeRepository employeeRepo)
     {
         _assignmentRepo = assignmentRepo;
         _assetRepo = assetRepo;
+        _employeeRepo = employeeRepo;
     }
 
     public void AssignAsset(AssignAssetDto dto)
@@ -69,13 +72,24 @@ public class AssetAssignmentService : IAssetAssignmentService
 
     public List<AssetAssignmentResponseDto> GetAllAssignments()
     {
-        return _assignmentRepo.GetAll().Select(a => new AssetAssignmentResponseDto
+        var assets = _assetRepo.GetAllAssets();
+        var employees = _employeeRepo.GetAllEmployees();
+
+        return _assignmentRepo.GetAll().Select(a =>
         {
-            Id = a.Id,
-            AssetId = a.AssetId,
-            EmployeeId = a.EmployeeId,
-            IssuedDate = a.IssuedDate,
-            ReturnDate = a.ReturnDate
+            var asset = assets.FirstOrDefault(asset => asset.Id == a.AssetId);
+            var employee = employees.FirstOrDefault(employee => employee.Id == a.EmployeeId);
+
+            return new AssetAssignmentResponseDto
+            {
+                Id = a.Id,
+                AssetId = a.AssetId,
+                EmployeeId = a.EmployeeId,
+                AssetName = asset?.Name,
+                EmployeeName = employee?.Name,
+                IssuedDate = a.IssuedDate,
+                ReturnDate = a.ReturnDate
+            };
         }).ToList();
     }
 

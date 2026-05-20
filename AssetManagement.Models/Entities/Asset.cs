@@ -13,4 +13,6 @@ public class Asset
     public string SerialNumber { get; set; }
 
     public string Status { get; set; } //Available / Assigned / UnderRepair
+
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

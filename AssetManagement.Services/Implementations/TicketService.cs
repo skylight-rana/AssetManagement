@@ -10,10 +10,17 @@ namespace AssetManagement.Services.Implementations;
 public class TicketService : ITicketService
 {
     private readonly ITicketRepository _repo;
+    private readonly IEmployeeRepository _employeeRepo;
+    private readonly IAssetRepository _assetRepo;
 
-    public TicketService(ITicketRepository repo)
+    public TicketService(
+        ITicketRepository repo,
+        IEmployeeRepository employeeRepo,
+        IAssetRepository assetRepo)
     {
-        _repo = repo; 
+        _repo = repo;
+        _employeeRepo = employeeRepo;
+        _assetRepo = assetRepo;
     }
 
     public void CreateTicket(CreateTicketDto dto)
@@ -23,7 +30,8 @@ public class TicketService : ITicketService
             EmployeeId = dto.EmployeeId,
             AssetId = dto.AssetId,
             IssueDescription = dto.IssueDescription,
-            Status = "Open"
+            Status = "Open",
+            CreatedAt = DateTime.Now
         };
 
         _repo.AddTicket(ticket);
@@ -44,27 +52,36 @@ public class TicketService : ITicketService
 
     public List<TicketResponseDto> GetAllTickets()
     {
-        return _repo.GetAllTickets().Select(t => new TicketResponseDto
-        {
-            Id = t.Id,
-            EmployeeId = t.EmployeeId,
-            AssetId = t.AssetId,
-            IssueDescription = t.IssueDescription,  
-            Status = t.Status,
-            ResolutionNotes = t.ResolutionNotes
-        }).ToList();
+        return MapTickets(_repo.GetAllTickets());
     }
 
     public List<TicketResponseDto> GetTicketsByEmployee(int employeeId)
     {
-        return _repo.GetTicketsByEmployee(employeeId).Select(t => new TicketResponseDto
+        return MapTickets(_repo.GetTicketsByEmployee(employeeId));
+    }
+
+    private List<TicketResponseDto> MapTickets(List<Ticket> tickets)
+    {
+        var employees = _employeeRepo.GetAllEmployees();
+        var assets = _assetRepo.GetAllAssets();
+
+        return tickets.Select(t =>
         {
-            Id = t.Id,
-            EmployeeId = t.EmployeeId,
-            AssetId = t.AssetId,
-            IssueDescription = t.IssueDescription,
-            Status = t.Status,
-            ResolutionNotes = t.ResolutionNotes
+            var employee = employees.FirstOrDefault(employee => employee.Id == t.EmployeeId);
+            var asset = assets.FirstOrDefault(asset => asset.Id == t.AssetId);
+
+            return new TicketResponseDto
+            {
+                Id = t.Id,
+                EmployeeId = t.EmployeeId,
+                AssetId = t.AssetId,
+                EmployeeName = employee?.Name,
+                AssetName = asset?.Name,
+                IssueDescription = t.IssueDescription,
+                Status = t.Status,
+                ResolutionNotes = t.ResolutionNotes,
+                CreatedAt = t.CreatedAt
+            };
         }).ToList();
     }
 }

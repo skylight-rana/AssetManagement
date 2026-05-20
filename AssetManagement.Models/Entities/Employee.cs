@@ -19,4 +19,6 @@ public class Employee
 
     // Navigation Property
     public User User { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

@@ -27,7 +27,8 @@ public class EmployeeService : IEmployeeService
         {
             Username = dto.Username,
             Password = dto.Password,
-            Role = "Employee"
+            Role = "Employee",
+            CreatedAt = DateTime.Now
         };
 
         _userRepository.AddUser(user);
@@ -37,7 +38,8 @@ public class EmployeeService : IEmployeeService
         {
             Name = dto.Name,
             Email = dto.Email,
-            UserId = user.Id
+            UserId = user.Id,
+            CreatedAt = DateTime.Now
         };
 
         _employeeRepository.AddEmployee(employee);

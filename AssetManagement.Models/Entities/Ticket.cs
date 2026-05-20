@@ -15,4 +15,6 @@ public class Ticket
     public string Status { get; set; } //Open, InProgress, Resolved
 
     public string? ResolutionNotes { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

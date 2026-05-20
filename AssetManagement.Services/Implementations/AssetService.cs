@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using AssetManagement.Models.DTOs;
 using AssetManagement.Models.Entities;
 using AssetManagement.Repositories.Interfaces;
 using AssetManagement.Services.Interfaces;
 
 namespace AssetManagement.Services.Implementations;
+
 public class AssetService : IAssetService
 {
     private readonly IAssetRepository _repository;
@@ -23,7 +24,8 @@ public class AssetService : IAssetService
             Name = dto.Name,
             Type = dto.Type,
             SerialNumber = dto.SerialNumber,
-            Status = "Available"
+            Status = "Available",
+            CreatedAt = DateTime.Now
         };
 
         _repository.AddAsset(asset);
@@ -35,7 +37,7 @@ public class AssetService : IAssetService
 
         return assets.Select(a => new AssetResponseDto
         {
-            Id=a.Id,
+            Id = a.Id,
             Name = a.Name,
             Type = a.Type,
             SerialNumber = a.SerialNumber,
@@ -47,7 +49,7 @@ public class AssetService : IAssetService
     {
         var asset = _repository.GetById(id);
 
-        if(asset == null)
+        if (asset == null)
         {
             throw new Exception("Asset not found");
         }
