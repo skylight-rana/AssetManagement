@@ -1,8 +1,9 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace AssetManagement.Models.Entities;
+
 public class AssetDocument
 {
     public int Id { get; set; }
@@ -14,6 +15,14 @@ public class AssetDocument
 
     public DateTime UploadedAt { get; set; }
 
-    //Navigation 
+    public string Status { get; set; } = "Active";
+
+    public string? CreatedBy { get; set; }
+    public string? UpdatedBy { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime? UpdatedAt { get; set; }
+
+    // Navigation
     public Asset Asset { get; set; }
 }

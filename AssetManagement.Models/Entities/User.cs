@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,7 +12,13 @@ public class User
 
     public string Password { get; set; }
 
-    public string Role { get; set; } // "Admin" or "Employee"
+    public string Role { get; set; } // Admin / Employee
+
+    public string Status { get; set; } = "Active";
+
+    public string? CreatedBy { get; set; }
+    public string? UpdatedBy { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime? UpdatedAt { get; set; }
 }
