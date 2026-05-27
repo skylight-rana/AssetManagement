@@ -46,4 +46,48 @@ public class AssetDocumentController : ControllerBase
     {
         return Ok(_service.GetDocuments(assetId));
     }
+
+    // View document in browser
+    [HttpGet("view/{documentId}")]
+    public IActionResult ViewDocument(int documentId)
+    {
+        var document = _service.GetDocumentById(documentId);
+
+        if (!System.IO.File.Exists(document.FilePath))
+        {
+            return NotFound("File not found");
+        }
+
+        var contentType = GetContentType(document.FileName);
+        return PhysicalFile(document.FilePath, contentType, enableRangeProcessing: true);
+    }
+
+    // Download document
+    [HttpGet("download/{documentId}")]
+    public IActionResult DownloadDocument(int documentId)
+    {
+        var document = _service.GetDocumentById(documentId);
+
+        if (!System.IO.File.Exists(document.FilePath))
+        {
+            return NotFound("File not found");
+        }
+
+        var contentType = GetContentType(document.FileName);
+        return PhysicalFile(document.FilePath, contentType, document.FileName);
+    }
+
+    private static string GetContentType(string fileName)
+    {
+        var extension = Path.GetExtension(fileName).ToLowerInvariant();
+
+        return extension switch
+        {
+            ".pdf" => "application/pdf",
+            ".png" => "image/png",
+            ".jpg" => "image/jpeg",
+            ".jpeg" => "image/jpeg",
+            _ => "application/octet-stream"
+        };
+    }
 }

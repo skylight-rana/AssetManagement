@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AssetManagement.Models.DTOs;
@@ -25,6 +25,7 @@ public class AssetService : IAssetService
             Type = dto.Type,
             SerialNumber = dto.SerialNumber,
             Status = "Available",
+            IsDeleted = false,
             CreatedAt = DateTime.Now
         };
 
@@ -52,6 +53,11 @@ public class AssetService : IAssetService
         if (asset == null)
         {
             throw new Exception("Asset not found");
+        }
+
+        if (asset.Status == "Assigned")
+        {
+            throw new Exception("This asset is assigned. Please return the asset before deleting it.");
         }
 
         _repository.DeleteAsset(asset);

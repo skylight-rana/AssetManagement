@@ -8,4 +8,5 @@ public interface IAssetDocumentService
 {
     void UploadDocument(byte[] fileData, string fileName, int assetId);
     List<DocumentResponseDto> GetDocuments(int assetId);
+    DocumentResponseDto GetDocumentById(int id);
 }

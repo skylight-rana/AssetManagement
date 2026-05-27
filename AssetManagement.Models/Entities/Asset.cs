@@ -1,4 +1,4 @@
-﻿﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,6 +14,9 @@ public class Asset
     public string SerialNumber { get; set; }
 
     public string Status { get; set; } = "Available"; // Available / Assigned / UnderRepair
+
+    public bool IsDeleted { get; set; } = false;
+    public DateTime? DeletedAt { get; set; }
 
     public string? CreatedBy { get; set; }
     public string? UpdatedBy { get; set; }

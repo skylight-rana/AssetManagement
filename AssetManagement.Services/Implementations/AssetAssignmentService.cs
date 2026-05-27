@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using AssetManagement.Models.DTOs;
 using AssetManagement.Models.Entities;
@@ -35,19 +36,28 @@ public class AssetAssignmentService : IAssetAssignmentService
         if (asset.Status == "Assigned")
             throw new Exception("Asset already assigned");
 
-        //Create Assignment
+        var employee = _employeeRepo.GetById(dto.EmployeeId);
+
+        if (employee == null)
+        {
+            throw new Exception("Employee not found");
+        }
+
+        // Create Assignment
         var assignment = new AssetAssignment
         {
             AssetId = dto.AssetId,
             EmployeeId = dto.EmployeeId,
             IssuedDate = DateTime.Now,
-            ConditionAtIssue = dto.ConditionAtIssue
+            ConditionAtIssue = dto.ConditionAtIssue,
+            Status = "Active"
         };
 
         _assignmentRepo.AssignAsset(assignment);
 
-        //Upadte Asset status
+        // Update Asset status
         asset.Status = "Assigned";
+        asset.UpdatedAt = DateTime.Now;
         _assetRepo.UpdateAsset(asset);
     }
 
@@ -58,14 +68,24 @@ public class AssetAssignmentService : IAssetAssignmentService
         if (assignment == null)
             throw new Exception("Assignment not found");
 
+        if (assignment.ReturnDate != null || assignment.Status == "Returned")
+            throw new Exception("Asset is already returned");
+
         assignment.ReturnDate = DateTime.Now;
         assignment.ConditionAtReturn = dto.ConditionAtReturn;
+        assignment.Status = "Returned";
+        assignment.UpdatedAt = DateTime.Now;
 
         _assignmentRepo.Update(assignment);
 
-        //Upadte asset
+        // Update asset
         var asset = _assetRepo.GetById(assignment.AssetId);
-        asset.Status = "Availabe";
+
+        if (asset == null)
+            throw new Exception("Asset not found");
+
+        asset.Status = "Available";
+        asset.UpdatedAt = DateTime.Now;
 
         _assetRepo.UpdateAsset(asset);
     }
@@ -92,5 +112,4 @@ public class AssetAssignmentService : IAssetAssignmentService
             };
         }).ToList();
     }
-
 }

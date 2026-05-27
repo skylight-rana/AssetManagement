@@ -54,13 +54,31 @@ public class AssetDocumentService : IAssetDocumentService
     public List<DocumentResponseDto> GetDocuments(int assetId)
     {
         return _repo.GetByAssetId(assetId)
-            .Select(d => new DocumentResponseDto
-            {
-                Id = d.Id,
-                AssetId = d.AssetId,
-                FileName = d.FileName,
-                FilePath = d.FilePath,
-                UploadAt = d.UploadedAt
-            }).ToList();
+            .Select(d => MapDocument(d))
+            .ToList();
+    }
+
+    public DocumentResponseDto GetDocumentById(int id)
+    {
+        var doc = _repo.GetById(id);
+
+        if (doc == null)
+            throw new Exception("Document not found");
+
+        return MapDocument(doc);
+    }
+
+    private DocumentResponseDto MapDocument(AssetDocument d)
+    {
+        return new DocumentResponseDto
+        {
+            Id = d.Id,
+            AssetId = d.AssetId,
+            FileName = d.FileName,
+            FilePath = d.FilePath,
+            ViewUrl = $"/api/assetdocument/view/{d.Id}",
+            DownloadUrl = $"/api/assetdocument/download/{d.Id}",
+            UploadAt = d.UploadedAt
+        };
     }
 }

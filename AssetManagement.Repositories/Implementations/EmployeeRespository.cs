@@ -32,4 +32,9 @@ public class EmployeeRepository : IEmployeeRepository
     {
         return _context.Employees.FirstOrDefault(e => e.UserId == userId);
     }
+
+    public Employee GetById(int id)
+    {
+        return _context.Employees.FirstOrDefault(e => e.Id == id);
+    }
 }

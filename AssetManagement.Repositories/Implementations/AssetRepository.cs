@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using AssetManagement.Data.Context;
 using AssetManagement.Models.Entities;
@@ -23,12 +24,15 @@ public class AssetRepository : IAssetRepository
 
     public List<Asset> GetAllAssets()
     {
-        return _context.Assets.ToList();
+        return _context.Assets
+            .Where(a => !a.IsDeleted)
+            .ToList();
     }
 
     public Asset GetById(int id)
     {
-        return _context.Assets.Find(id);
+        return _context.Assets
+            .FirstOrDefault(a => a.Id == id && !a.IsDeleted);
     }
 
     public void UpdateAsset(Asset asset)
@@ -39,7 +43,12 @@ public class AssetRepository : IAssetRepository
 
     public void DeleteAsset(Asset asset)
     {
-        _context.Assets.Remove(asset);
+        asset.IsDeleted = true;
+        asset.DeletedAt = DateTime.Now;
+        asset.UpdatedAt = DateTime.Now;
+        asset.Status = "Deleted";
+
+        _context.Assets.Update(asset);
         _context.SaveChanges();
     }
 }
